@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-//// 
+//
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,9 +15,22 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
+// Time calculation
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 
 public class MapReduce {
-	
+    
+    public static  String passengerFile = null;
+    public static  String airportFile = null;
+    public static  int jobId ;
+    public static  String flightId;
+    // file Map
+    public static  Map<String,String> mapAirport = null;
+    public static  Map<String,String> mapAirportNames = null;
+    public static  Map<String,Integer> mapAirportIATA = null;
     // cleaning
     public static List<String> passengerDataFile = new ArrayList<>();
     // file split
@@ -26,8 +39,94 @@ public class MapReduce {
     // Map data file
     public static List<String> mapDataFile = new ArrayList<>();
     public static List<String>[] arrayOfmapDataFile;
+    public static  HashMap<String, Integer> map1 = new HashMap<String,Integer>();
+    public static  HashMap<String, Integer> map2 = new HashMap<String,Integer>();
     
-    public static void readFileandMap(String filename, String resultfile, int fileNo ) throws Exception {
+    public static void readFileandMap(int fileNo ) throws Exception {
+        
+	// read airport data    
+	mapAirport = new HashMap<String,String>();
+	mapAirportNames = new HashMap<String,String>();
+	mapAirportIATA = new HashMap<String,Integer>();
+	// Initialize
+	mapDataFile = new ArrayList<>();
+		
+	FileInputStream fstream2 = new FileInputStream(airportFile);
+        String strLine1;
+        // Use DataInputStream to read binary NOT text.
+        BufferedReader br1 = new BufferedReader(new InputStreamReader(fstream2));
+        while ((strLine1 = br1.readLine()) != null) {
+            String temp[] = strLine1.split(",");
+            mapAirport.put( temp[1],temp[2]+"," +temp[3]);
+            mapAirportNames.put(temp[1],temp[0]);
+            mapAirportIATA.put(temp[1],0);
+        }
+        
+        br1.close();
+	
+	// read passenger data    
+        List<String> list = arrayOfdataFile[fileNo];
+        map1 = new HashMap<String,Integer>();
+        
+	for (int i = 0; i < list.size(); i++) {
+        	
+            String temp[] = list.get(i).split(",");
+		
+            if (jobId == 0) {
+                map1.put( temp[2]+"-"+temp[1], 1);
+            }
+            else if (jobId == 1) {
+                if ( temp[1].compareTo(flightId) == 0 ) {
+                	int seconds = Integer.parseInt(temp[4]);
+    	            	int timesAdd = Integer.parseInt(temp[5]);
+    	            	    	            		
+    	            	LocalDateTime dateTime = LocalDateTime.ofEpochSecond(seconds, 0, ZoneOffset.UTC);
+    	            	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.ENGLISH);
+    	            	String depatureTime = dateTime.format(formatter);
+    	            	//System.out.println(formattedDate); 
+    	            		
+    	            	LocalTime time = LocalTime.parse(depatureTime);
+    	            	String arrivalTime = formatter.format(time.plusMinutes(timesAdd));
+    	            	
+    	            	DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("HH:mm", Locale.ENGLISH);
+    	            	String flightTime = formatter1.format(time.plusMinutes(timesAdd));
+    	            	//String flightTime = formatter.format(time1);
+    	            	System.out.println(flightTime);
+    	            	
+                	map1.put( temp[0]+"-"+temp[2]+"-"+ temp[3]+"-"+depatureTime+"-"+arrivalTime+"-"+flightTime, 1);
+                }
+            }
+            else if (jobId == 2) {
+               	map1.put( temp[1]+"-"+temp[0], 1);
+            }
+            else if (jobId == 3) {
+                String temp1[] = mapAirport.get(temp[2]).split(","); 
+                
+		// Nautical Miles
+                double lat1 = Double.parseDouble(temp1[0]);
+                double log1 = Double.parseDouble(temp1[1]);
+                String temp2[] = mapAirport.get(temp[3]).split(",");
+                double lat2 = Double.parseDouble(temp2[0]);
+                double log2 = Double.parseDouble(temp2[1]);
+                double nauticalmiles = distance(lat1, log1, lat2, log2);
+                	
+                try {
+                	String strNautical = temp[1] +"-"+ temp[0] +"-"+ Math.round(nauticalmiles*100)/100;
+                	if ( map1.get(strNautical)  == null ) {
+                		map1.put( strNautical, 1);
+			}
+    		} catch (Exception e) {
+    			e.printStackTrace();
+    		}
+            }          
+       }
+ 
+       for (String i : map1.keySet()) {
+	   mapDataFile.add(i + "," + map1.get(i));
+        }
+
+        System.out.println("mapDataFile"+ mapDataFile.size());
+        arrayOfmapDataFile[fileNo] = mapDataFile;
     }
 
     public static void FileSplit(int files) throws FileNotFoundException, IOException{
@@ -119,9 +218,13 @@ public class MapReduce {
    public static void main(int args[], String argstr[]) { 
 	
 	// variable intialization
+	int count = 0; 			
 	int threadNum = args[1]; // No Of Parallel Processing
         passengerFile = argstr[0]; //"C:\\Users\\nirupam.lokhande\\Downloads\\AComp_Passenger_data_no_error.csv";
         airportFile = argstr[1]; //"C:\\Users\\nirupam.lokhande\\Downloads\\AComp_Passenger_data_no_error.csv";
+		
+	MapReduce.jobId = args[0]; // Job No    
+	MapReduce.flightId = argstr[2];  // Flight ID
 		 
 	// Parallel Processing
 	ExecutorService executor = Executors.newFixedThreadPool(threadNum);
@@ -131,16 +234,15 @@ public class MapReduce {
 	    	
             // Step 1 : Cleansing / Preprocessing
 	     cleansing(passengerFile);
-	    // split files into multiple files or parallel processing
+	    // Step 2: Split files into multiple files or parallel processing
 	     FileSplit(threadNum);
-	    
-	    // Parallel Execution
+	    // Step 3: Mapper 
              try {
 		for (int i=0;i<threadNum;i++) { 	
 			int fileNo = i; // files
 			System.out.println("fileNo"+fileNo);
 			
-			// parallel
+			// Parallel Execution
 			FutureTask<Integer> Task = new FutureTask<Integer>(new Callable<Integer>() {
 				@Override
 				public Integer call() {
@@ -158,8 +260,7 @@ public class MapReduce {
 			taskList.add(Task);
 			executor.execute(Task);
 		}
-		     
-	    // Step 3: Mapper 
+		 
             // Step 4: Reducer
 	}
 	catch (IOException e) 
