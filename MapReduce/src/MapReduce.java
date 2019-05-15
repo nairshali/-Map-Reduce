@@ -49,7 +49,8 @@ public static void cleansing(String inputfile) throws IOException {
 		     passengerDataFile.add(strLine);
 		  }
 	    }    
-	    br.close(); 	
+	    br.close(); 
+	    out.close();
   	}
 
 public class MapReduce {public static void main(int args[], String argstr[])  
