@@ -27,7 +27,7 @@ public class MapReduce {
     public static List<String> mapDataFile = new ArrayList<>();
     public static List<String>[] arrayOfmapDataFile;
     
-	public static void readFileandMap(String filename, String resultfile, int fileNo ) throws Exception {
+    public static void readFileandMap(String filename, String resultfile, int fileNo ) throws Exception {
     }
 
     public static void FileSplit(int files) throws FileNotFoundException, IOException{
@@ -53,13 +53,14 @@ public class MapReduce {
 	 
 	for (int j = 0; j < passengerDataFile.size(); j++) 
 	{
-	   strLine = passengerDataFile.get(j);   
-	   dataFile.add(strLine);
 	   if( (j%lines) == 0 ){ 
 	      System.out.println("dataFile" + dataFile.size());	   
 	      arrayOfdataFile[i] = dataFile;
+	      dataFile  = new ArrayList<>();
 	      i++;	   
 	   }
+	   strLine = passengerDataFile.get(j);   
+	   dataFile.add(strLine);
 	}
 	System.out.println("arrayOfdataFile.length" + arrayOfdataFile.length);
    }
