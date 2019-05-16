@@ -42,27 +42,131 @@ public class MapReduce {
     public static  HashMap<String, Integer> map1 = new HashMap<String,Integer>();
     public static  HashMap<String, Integer> map2 = new HashMap<String,Integer>();
     
-    public static void readFileandMap(int fileNo ) throws Exception {
+    public static double distance(double lat1, double lon1, double lat2, double lon2) {
+    	  double theta = lon1 - lon2;
+    	  double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
+    	  dist = Math.acos(dist);
+    	  dist = rad2deg(dist);
+    	  dist = dist * 60 * 1.1515 * 0.8684;
+    	  return (dist);
+    }
+    
+    /*::  This function converts decimal degrees to radians             :*/
+    public static double deg2rad(double deg) {
+    	  return (deg * Math.PI / 180.0);
+    }
+    
+    /*::  This function converts radians to decimal degrees             :*/
+    public static double rad2deg(double rad) {
+    	  return (rad * 180.0 / Math.PI);
+    }
+
+    public static void reduce(HashMap<String, Integer> argsmap1, HashMap<String, Double> argsmap2[]) throws Exception {
+    
+        map2 = new HashMap<String,Integer>();
+	System.out.println("arrayOfmapDataFile.length" + arrayOfmapDataFile.length);
+		
+	for (int i = 0; i < arrayOfmapDataFile.length; i++) {
+		List<String> list = arrayOfmapDataFile[i];
+
+		System.out.println("list.size()" + list.size());
+			
+		for (int j = 0; j < list.size(); j++) {
+			String strLine = list.get(j);
+	            	System.out.println("strLine"+ strLine);
+		        if (strLine != null) {		            
+		            String temp[] = strLine.split(",");
+		            //System.out.println("Test 1");
+		            map2.put(temp[0], 1);
+		            System.out.println(temp[0]);
+		        }
+		}
+	}
         
-	// read airport data    
-	mapAirport = new HashMap<String,String>();
-	mapAirportNames = new HashMap<String,String>();
-	mapAirportIATA = new HashMap<String,Integer>();
+        if (jobId == 0) {
+        	
+           	for (String i : map2.keySet()) {
+	        	String temp[] = i.split("-");
+	        	//System.out.println(mapAirportIATA.get(temp[0]));
+	        	if ( mapAirportIATA.get(temp[0]) != null ) {
+	        		mapAirportIATA.put(temp[0], mapAirportIATA.get(temp[0])+1);	
+	        	}
+	        	else {
+	        		mapAirportIATA.put(temp[0], 1);	
+	        	}
+	      	}
+           	
+           	for (String i : mapAirportIATA.keySet()) {
+           		argsmap1.put( mapAirportNames.get(i), mapAirportIATA.get(i));
+           	}
+           	
+           	System.out.println(argsmap1);
+           	
+        }
+        else if (jobId == 1) {
+    	   
+    	    argsmap1.putAll(map2);
+    	    //System.out.println(argsmap1);
+        }
+        else if(jobId == 2) {
+     	   for (String i : map2.keySet()) {
+ 	        	String temp[] = i.split("-");
+ 	        	//System.out.println(map1.get(temp[0]));
+ 	        	if ( argsmap1.get(temp[0]) != null ) {
+ 	        		argsmap1.put(temp[0], argsmap1.get(temp[0])+1);	
+ 	        	}
+ 	        	else {
+ 	        		argsmap1.put(temp[0], 1);	
+ 	        	}
+ 	    }
+        }
+        else if (jobId == 3) {
+    	   System.out.println("done 4.1");
+    	   System.out.println(map2.keySet());
+    	   System.out.println("done 4.3");
+		
+    	   for (String i : map2.keySet()) {
+    		    System.out.println(i);
+    		    String temp[] = i.split("-");
+    		    double naut = Double.parseDouble(temp[2]);
+	        	
+	        	// Flight Nautical
+	        	if ( argsmap2[0].get(temp[0]) == null ) {
+	        		argsmap2[0].put(temp[0], naut);
+	        	}
+	        	else {
+	        		//System.out.println(map3.get(temp[1]));
+	        		argsmap2[0].put(temp[0], argsmap2[0].get(temp[0]) + naut);			
+	        	}
+	        	
+	        	// Traveller Nautical
+	        	if ( argsmap2[1].get(temp[1]) == null ) {
+	        	     argsmap2[1].put(temp[1], naut);
+	        	}
+	        	else {
+	        	      //System.out.println(map3.get(temp[1]));
+	        	      argsmap2[1].put(temp[1], argsmap2[1].get(temp[1]) + naut);			
+	        	}
+	        	
+	        	// Highest Traveller Nautical
+	        	Double maxValueInMap=(Collections.max(argsmap2[1].values()));
+	        	for (String i1 : argsmap2[1].keySet()) {
+	        	    if (argsmap2[1].get(i1) == maxValueInMap) {
+	                    	System.out.println("MaxValue" + maxValueInMap);     // Print the key with max value
+	                    	argsmap2[2].put(i1, maxValueInMap);
+	                    }
+	        	}	        	
+	      	}
+    	   
+       }
+        
+        System.out.println("done 4");
+    }
+	
+    public static void readFileandMap(int fileNo ) throws Exception {
+
 	// Initialize
 	mapDataFile = new ArrayList<>();
-		
-	FileInputStream fstream2 = new FileInputStream(airportFile);
-        String strLine1;
-        // Use DataInputStream to read binary NOT text.
-        BufferedReader br1 = new BufferedReader(new InputStreamReader(fstream2));
-        while ((strLine1 = br1.readLine()) != null) {
-            String temp[] = strLine1.split(",");
-            mapAirport.put( temp[1],temp[2]+"," +temp[3]);
-            mapAirportNames.put(temp[1],temp[0]);
-            mapAirportIATA.put(temp[1],0);
-        }
-        
-        br1.close();
 	
 	// read passenger data    
         List<String> list = arrayOfdataFile[fileNo];
@@ -132,7 +236,7 @@ public class MapReduce {
     public static void FileSplit(int files) throws FileNotFoundException, IOException{
 
 	int lines = 0;  //set this to whatever number of lines you need in each file
-	int count = passengerDataFile.size();
+	int count = passengerDataFile.size() - 1;
 	int i = 0;
 	    
 	// file split
@@ -152,20 +256,46 @@ public class MapReduce {
 	 
 	for (int j = 0; j < passengerDataFile.size(); j++) 
 	{
-	   if( (j%lines) == 0 ){ 
-	      System.out.println("dataFile" + dataFile.size());	   
-	      arrayOfdataFile[i] = dataFile;
-	      dataFile  = new ArrayList<>();
-	      i++;	   
-	   }
-	   strLine = passengerDataFile.get(j);   
+	   System.out.println("j % lines " + j);
+
+	   String strLine = passengerDataFile.get(j);   
 	   dataFile.add(strLine);
+	   
+	   if( (j % lines == 0) && (j != 0) ){ 
+	      System.out.println("dataFile" + dataFile.size());	
+	      arrayOfdataFile[i] = dataFile;
+	      //System.out.println("i " + j + lines);
+	      dataFile  = new ArrayList<>();
+	      i++;
+	      System.out.println("i " + i);
+	   }
 	}
 	System.out.println("arrayOfdataFile.length" + arrayOfdataFile.length);
    }
 
    public static void cleansing(String inputfile) throws IOException {
-    	passengerDataFile = new ArrayList<>();
+    	
+	// read airport data    
+	mapAirport = new HashMap<String,String>();
+	mapAirportNames = new HashMap<String,String>();
+	mapAirportIATA = new HashMap<String,Integer>();
+			
+	FileInputStream fstream2 = new FileInputStream(airportFile);
+	String strLine1;
+	// Use DataInputStream to read binary NOT text.
+	BufferedReader br1 = new BufferedReader(new InputStreamReader(fstream2));
+	while ((strLine1 = br1.readLine()) != null) {
+		String temp[] = strLine1.split(",");
+		mapAirport.put( temp[1],temp[2]+"," +temp[3]);
+		mapAirportNames.put(temp[1],temp[0]);
+		mapAirportIATA.put(temp[1],0);
+	}	        
+	br1.close();
+
+	System.out.println("mapAirport"+ mapAirport.size());
+	
+	// read passenger file    
+	passengerDataFile = new ArrayList<>();
     	
     	BufferedReader br = new BufferedReader(new FileReader(inputfile)); //reader for input file intitialized only once
 	String strLine = null;
@@ -215,7 +345,7 @@ public class MapReduce {
 	    out.close();
   	}
 
-   public static void main(int args[], String argstr[]) { 
+   public static void main(int args[], String argstr[], HashMap<String, Integer> argsmap1, HashMap<String, Double> argsmap2[]) { 
 	
 	// variable intialization
 	int count = 0; 			
@@ -260,12 +390,30 @@ public class MapReduce {
 			taskList.add(Task);
 			executor.execute(Task);
 		}
-		 
-            // Step 4: Reducer
+		 System.out.println("Test 2");
+					 
+		// Wait until all results are available and combine them at the same time
+		for (int j = 0; j < threadNum; j++) {
+			FutureTask<Integer> futureTask = taskList.get(j);
+			count += futureTask.get();
+				            
+			if (count == threadNum) {
+				MapReduce.reduce(argsmap1, argsmap2);
+			}
+		}
+		executor.shutdown();
+					    				        
+	} catch (Exception e) {
+						// TODO Auto-generated catch block
+		e.printStackTrace();
 	}
-	catch (IOException e) 
-	{
-	   e.printStackTrace();
 	}
-    }
+	catch (FileNotFoundException e) {
+		e.printStackTrace();
+	}
+	catch (IOException e) {
+		e.printStackTrace();
+	}
+} 
+
 }
