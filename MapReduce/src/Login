@@ -1,0 +1,79 @@
+package test;
+
+import javax.swing.*;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
+
+public class Login{
+
+    String msg = " ";
+    public static  Map<String,Integer> passengerMap = null;
+    static String filepath[]=new String[1];
+     
+    public static void main(String args[]){
+    	Login gui = new Login();
+      gui.MainFrame(args);
+        
+    }
+    
+    public void MainFrame(String args[]){
+        JFrame frame = new JFrame("Airline User Login");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        // MainFrame for Employer Login / Passenger Login
+        JPanel mainPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(10,10,10,10);
+       
+        // label
+        JLabel lblHeading = new JLabel("AIRLINE Services",SwingConstants.CENTER);  
+        lblHeading.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        lblHeading.setFont(new Font("Serif", Font.BOLD, 30));
+        lblHeading.setForeground(Color.RED);
+        
+        c.gridx = 0;
+        c.gridy = 1;
+        mainPanel.add(lblHeading,c);
+        
+        // Employer Login 
+        JButton employerLogin = new JButton("Employer Login");
+        employerLogin.setFont(new Font("Serif", Font.BOLD, 14));
+        employerLogin.setPreferredSize(new Dimension(140, 20));
+        employerLogin.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+            	frame.dispose();
+            	Login employer = new Login();
+                employer.employerLogin();
+             }
+          });
+        
+        c.gridx = 0;
+        c.gridy = 2;
+        mainPanel.add(employerLogin,c);
+        
+     // Passenger Login 
+        JButton passengerLogin = new JButton("Traveller Login");
+        passengerLogin.setFont(new Font("Serif", Font.BOLD, 14));
+        passengerLogin.setPreferredSize(new Dimension(140, 20));
+        passengerLogin.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                frame.dispose();
+                Login passenger = new Login();
+                passenger.passengerLogin(args);
+             }
+          }); 
+        
+        
+        c.gridx = 0;
+        c.gridy = 3;
+        mainPanel.add(passengerLogin,c);
+        frame.getContentPane().add(BorderLayout.CENTER,mainPanel); 
+        frame.setSize(500,500);
+        frame.setVisible(true);
+ 
+    
+}
