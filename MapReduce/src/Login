@@ -156,4 +156,114 @@ public class Login{
         employerframe.setVisible(true);
     }
     
+    public void passengerLogin(String args[]){
+    	
+    	JFrame passengerframe = new JFrame("Passenger Login");
+    	passengerframe.setBounds(100, 100, 450, 300);
+    	passengerframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+    	passengerframe.getContentPane().setLayout(new BorderLayout(0, 0));
+    		
+    	JPanel passengerpanel = new JPanel();
+    	passengerpanel.setLayout(null);
+    	passengerpanel.setBounds(200, 100, 341, 167);	
+    	passengerframe.getContentPane().add(passengerpanel, BorderLayout.CENTER);
+    	
+    	JLabel lblpassengerUsername = new JLabel("Passenger Login:");  
+    	lblpassengerUsername.setBounds(10, 35, 117, 14);
+        passengerpanel.add(lblpassengerUsername);
+		
+		JTextField strpassengerUsername = new JTextField(20);
+		strpassengerUsername.setBounds(126, 32, 169, 20);
+		passengerpanel.add(strpassengerUsername);
+		strpassengerUsername.setColumns(10);
+		
+		JLabel lblPassword = new JLabel("Password:");
+		lblPassword.setBounds(10, 60, 83, 14);
+		passengerpanel.add(lblPassword);
+		
+		JPasswordField strPassword = new JPasswordField(20);
+		strPassword.setBounds(126, 57, 169, 20);
+		passengerpanel.add(strPassword);
+    		
+    	JButton btnLogin = new JButton("Login");
+    	btnLogin.setBounds(10, 105, 91, 23);
+    	passengerpanel.add(btnLogin);
+    		
+    	JButton btnReset = new JButton("Reset");
+    	btnReset.setBounds(120, 105, 91, 23);
+    	passengerpanel.add(btnReset);
+    		
+    	JButton btnBack = new JButton("Back");
+    	btnBack.setBounds(240, 105, 91, 23);
+    	passengerpanel.add(btnBack);
+    	
+	// Login
+        btnLogin.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                	try {
+                	   String passengerFile = args[0];
+                	
+			    FileInputStream fstream = new FileInputStream(passengerFile);
+			    // Use DataInputStream to read binary NOT text.
+	                    BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+	                    String strLine;
+	                    passengerMap = new HashMap<String,Integer>();
+	                    
+	                    try {
+				while ((strLine = br.readLine()) != null) {
+					String temp[] = strLine.split(",");
+					passengerMap.put(temp[0], 1);
+					}
+							
+				br.close();
+				} catch (IOException e) {
+				// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	                    
+			} catch (IOException e) {
+			// TODO Auto-generated catch block
+                		JOptionPane.showMessageDialog(null, "Please Login As Manager And Select Files");                    	
+                	}
+                    
+                  if(passengerMap.get(strpassengerUsername.getText()) == 1 
+                		  && passengerMap.get(strPassword.getText()) == 1) {
+                    JOptionPane.showMessageDialog(null, "Login Sucessful ");
+                    passengerframe.dispose();
+                    args[2] = strpassengerUsername.getText();
+                    try {
+						FlightDetails.passengerDetailsGui(args);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+                  }else
+                  {
+                    JOptionPane.showMessageDialog(null, "Wrong Inputs", "Please Check", JOptionPane.WARNING_MESSAGE);
+                    return;
+                  }
+                }
+              }); 
+            
+         // Reset
+            btnReset.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent event) {
+                	strpassengerUsername.setText("");
+                	strPassword.setText("");
+                }
+              });
+            
+         // Back
+            btnBack.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent event) {
+                	passengerframe.dispose();
+                	Login.main(null);
+                }
+              });
+           
+            passengerframe.getContentPane().add(BorderLayout.CENTER,passengerpanel); 
+            passengerframe.setSize(400,200);
+            passengerframe.setVisible(true);
+    }
+    
 }
