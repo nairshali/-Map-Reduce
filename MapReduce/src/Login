@@ -92,20 +92,20 @@ public class Login{
     	
     	JLabel lblEmpUsername = new JLabel("Employer Login:");
         lblEmpUsername.setBounds(10, 35, 117, 14);
-		employerpanel.add(lblEmpUsername);
+	employerpanel.add(lblEmpUsername);
 		
-		JTextField strEmpUsername = new JTextField(20);
-		strEmpUsername.setBounds(126, 32, 169, 20);
-		employerpanel.add(strEmpUsername);
-		strEmpUsername.setColumns(10);
+	JTextField strEmpUsername = new JTextField(20);
+	strEmpUsername.setBounds(126, 32, 169, 20);
+	employerpanel.add(strEmpUsername);
+	strEmpUsername.setColumns(10);
 		
-		JLabel lblPassword = new JLabel("Password:");
-		lblPassword.setBounds(10, 60, 83, 14);
-		employerpanel.add(lblPassword);
+	JLabel lblPassword = new JLabel("Password:");
+	lblPassword.setBounds(10, 60, 83, 14);
+	employerpanel.add(lblPassword);
 		
-		JPasswordField strPassword = new JPasswordField(20);
-		strPassword.setBounds(126, 57, 169, 20);
-		employerpanel.add(strPassword);
+	JPasswordField strPassword = new JPasswordField(20);
+	strPassword.setBounds(126, 57, 169, 20);
+	employerpanel.add(strPassword);
     		
     	JButton btnLogin = new JButton("Login");
     	btnLogin.setBounds(10, 105, 91, 23);
@@ -118,58 +118,8 @@ public class Login{
     	JButton btnBack = new JButton("Back");
     	btnBack.setBounds(240, 105, 91, 23);
     	employerpanel.add(btnBack);
-    		
-        /*JFrame employerframe = new JFrame("Employer Login");
-        employerframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  
-        JPanel employerpanel = new JPanel();
-        
-        JLabel lblEmpUsername = new JLabel("Employer Login:");
-        lblEmpUsername.setBounds(97, 65, 86, 14);
-		employerpanel.add(lblEmpUsername);
-		
-		JTextField strEmpUsername = new JTextField(20);
-		strEmpUsername.setBounds(193, 62, 170, 20);
-		employerpanel.add(strEmpUsername);
-		strEmpUsername.setColumns(10);
-		
-		JLabel lblPassword = new JLabel("Password:");
-		lblPassword.setBounds(97, 96, 86, 14);
-		employerpanel.add(lblPassword);
-		
-		JPasswordField strPassword = new JPasswordField(20);
-		strPassword.setBounds(193, 93, 170, 20);
-		employerpanel.add(strPassword);
-		
-		JLabel lblPassword = new JLabel("Password :");
-		lblPassword.setBounds(97, 96, 86, 14);
-		frame.getContentPane().add(lblPassword);
-		
-		JButton btnLogin = new JButton("Login");
-		btnLogin.setBounds(57, 137, 91, 23);
-		employerpanel.add(btnLogin);
-		
-		JButton btnReset = new JButton("Reset");
-		btnReset.setBounds(180, 137, 91, 23);
-		employerpanel.add(btnReset);
-		
-		JButton btnBack = new JButton("Back");
-		btnBack.setBounds(305, 137, 91, 23);
-		employerpanel.add(btnBack);
-        */
-        /* JPanel employerpanel = new JPanel(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        c.insets = new Insets(10,10,10,10);
-        
-        JLabel lblEmpUsername = new JLabel("Employer Login:");   
-        JLabel lblPassword = new JLabel("Password:");
-        JTextField strEmpUsername = new JTextField(20);
-        JPasswordField strPassword = new JPasswordField(20);
-        
-        lblEmpUsername.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        lblPassword.setAlignmentX(Component.RIGHT_ALIGNMENT);*/
-        
+    	
         //  Login
-        //JButton btnLogin = new JButton("Login");
         btnLogin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
               if(strEmpUsername.getText().equals(Username) && strPassword.getText().equals(Password) ) {
@@ -186,7 +136,6 @@ public class Login{
           });
         
         // Reset
-       // JButton btnReset = new JButton("Reset");
         btnReset.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
             	strEmpUsername.setText("");
@@ -195,36 +144,13 @@ public class Login{
           });
         
      // Back
-     //   JButton btnBack = new JButton("Back");
         btnBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
             	employerframe.dispose();
             	Login.main(null);
             }
           });
-        
- /*       c.gridx = 0;
-        c.gridy = 1;
-        employerpanel.add(lblEmpUsername,c);
-        c.gridx = 1;
-        c.gridy = 1;
-        employerpanel.add(strEmpUsername,c);
-        c.gridx = 0;
-        c.gridy = 2;
-        employerpanel.add(lblPassword,c);
-        c.gridx = 1;
-        c.gridy = 2;
-        employerpanel.add(strPassword,c); 
-        c.insets = new Insets(2,2,2,2);
-        c.gridx = 0;
-        c.gridy = 3;
-        employerpanel.add(btnLogin,c);
-        c.gridx = 1;
-        c.gridy = 3;
-        employerpanel.add(btnReset,c);
-        c.gridx = 2;
-        c.gridy = 3;
-        employerpanel.add(btnBack,c);*/
+
         employerframe.getContentPane().add(BorderLayout.CENTER,employerpanel); 
         employerframe.setSize(400,200);
         employerframe.setVisible(true);
