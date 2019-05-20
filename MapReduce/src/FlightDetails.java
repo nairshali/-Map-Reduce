@@ -34,16 +34,22 @@ public class FlightDetails {
     public static HashMap<String, String> listmap = new HashMap<String, String>();
     //public static HashMap<String, Double> argsmap2 = null;
     
-	public static void main(String[] args){
-		FlightDetails gui = new FlightDetails();
+    public static void main(String[] args){
+	FlightDetails gui = new FlightDetails();
         gui.flightDetailsGui();
-  }
+    }
   
-  public static void passengerDetailsGui(String[] args) throws IOException{        
-		
-		JFrame passengerDetails = new JFrame();
-		passengerDetails.setBounds(100, 100, 450, 300);
-		passengerDetails.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-  }
+    public static void passengerDetailsGui(String[] args) throws IOException{ 
+	JFrame passengerDetails = new JFrame();
+	passengerDetails.setBounds(100, 100, 450, 300);
+	passengerDetails.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+	
+    public void flightDetailsGui(){
+	JFrame flightDetails = new JFrame("Airline Flight Details");
+	flightDetails.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	flightDetails.setBounds(400, 200, 450, 300);
+	flightDetails.getContentPane().setLayout(null);
+    }
   
 }
