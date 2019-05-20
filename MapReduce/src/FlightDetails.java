@@ -293,6 +293,326 @@ public class FlightDetails {
             
             }
         });
+	    
+	// Table		
+	final  JTable table = new JTable();
+	final  JTable table_2 = new JTable();
+	final  JTable table_3 = new JTable();        
+
+	//Create the scroll pane and add the table to it.
+	JScrollPane scrollPane = new JScrollPane(table);
+	scrollPane.setBounds(111, 321, 464, 100);
+	scrollPane.setVisible(false);
+		            		
+	JScrollPane scrollPane_2 = new JScrollPane(table_2);
+	scrollPane_2.setBounds(111, 427, 229, 100);
+	scrollPane_2.setVisible(false);
+		
+	JScrollPane scrollPane_3 = new JScrollPane(table_3);
+	scrollPane_3.setBounds(355, 427, 220, 100);
+	scrollPane_3.setVisible(false);
+        
+       btnSubmit.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+            	
+            	argsmap1 = new HashMap<String,Integer>();
+                argsmap2[0] = new HashMap<String,Double>();
+                argsmap2[1] = new HashMap<String,Double>();
+                argsmap2[2] = new HashMap<String,Double>();
+            	
+            	intargs[0] = CBTasks.getSelectedIndex(); // Job Id
+            	
+            	if (intargs[0] == 1) {
+            		strargs[2] = (String) listFlightId.getSelectedValue();
+            		JOptionPane.showMessageDialog(null,strargs[2]);
+            	};
+            	
+            	if(CBThreads.getSelectedIndex() == 0 ) {
+            		intargs[1] = 1; // No Of Parallel Processing
+            	}
+            	else if(CBThreads.getSelectedIndex() == 1 ) {
+            		intargs[1] = 2; // No Of Parallel Processing
+            	}
+            	else if(CBThreads.getSelectedIndex() == 2 ) {
+            		intargs[1] = 4; // No Of Parallel Processing
+            	}
+            	else if(CBThreads.getSelectedIndex() == 3 ) {
+            		intargs[1] = 6; // No Of Parallel Processing
+            	}
+            	
+            	if (strargs[0] == null || strargs[1] == null) {
+            		JOptionPane.showMessageDialog(null, "Please select both files");
+            	}
+            	else {
+            		
+            		FileWriter fstream1 = null;
+					
+            		try {
+				fstream1 = new FileWriter(filepathPassenger.replace(".csv", "") + "_OUTPUTFILE_" + intargs[0] + ".csv");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	                BufferedWriter out = new BufferedWriter(fstream1); 					        
+	                
+            		long startTime = System.currentTimeMillis();
+            		MapReduce.main(intargs,strargs,argsmap1,argsmap2); 
+            		long endTime = System.currentTimeMillis();
+            		strExecutionTime.setText(Long.toString(endTime - startTime));
+            		System.out.println("strExecutionTime : " + strExecutionTime.getText());
+            		//System.out.println(argsmap2);
+
+            		                    
+                	if (intargs[0] == 0 ) {
+                		System.out.println(intargs[0]);
+                		DefaultTableModel model = new DefaultTableModel();
+                		model.addColumn("Airports");
+                		model.addColumn("NO Of flights");
+                		
+                		// header
+                		try {
+					out.write("Airports" + "," + "NO Of flights");
+					out.newLine();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}   //acquring the first column
+                        
+                        
+                		for (String i : argsmap1.keySet()) {
+        	        		try {
+						out.write(i + "," + argsmap1.get(i));
+						out.newLine();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}   //acquring the first column
+                            
+                          
+        	        	 	Object[] data = {i,argsmap1.get(i)};
+        	        	 	model.addRow(data);
+        	      	  	}
+                		 
+	                	table.setModel(model);
+				
+	                	if (scrollPane_2 != null) {
+	                		scrollPane_2.setVisible(false);
+	                	}
+	                	
+	                	if (scrollPane_3 != null) {
+                			scrollPane_3.setVisible(false);
+                		}	
+            		}
+            		else if(intargs[0] == 1 ) {            			
+            			
+            			// header
+                		try {
+					out.write("PassengerId,DeparturePort,ArrivalPort,DepartureTime,ArrivalTime,FlightTime");
+			            	out.newLine();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}   //acquring the first column
+                		
+                		
+            			System.out.println(intargs[0]);
+            			System.out.println(argsmap1);
+				
+            			DefaultTableModel model = new DefaultTableModel();
+            			model.addColumn("Passenger Id");
+                		model.addColumn("Departure Port");
+                		model.addColumn("Arrival Port");
+                		model.addColumn("Departure Time");
+                		model.addColumn("Arrival Time");
+                		model.addColumn("Flight Time");
+                		
+                		for (String i : argsmap1.keySet()) {
+        	        	    String temp[] = i.split("-");
+        	        	    Object[] data = {temp[0],temp[1],temp[2],temp[3],temp[4],temp[5]};
+        	        	    model.addRow(data);
+        	        	    
+        	        	    try {
+					out.write(temp[0]+","+temp[1]+","+temp[2]+","+temp[3]+","+temp[4]+","+temp[5]);
+					out.newLine();
+				     } catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+				     }   //acquring the first column
+        	        	    
+        	      	     	}
+                		
+                		table.setModel(model);
+                		
+                		table.setModel(model);
+	                	if (scrollPane_2 != null) {
+	                		scrollPane_2.setVisible(false);
+	                	}
+	                	
+	                	if (scrollPane_3 != null) {
+                			scrollPane_3.setVisible(false);
+                		}
+            		}
+            		else if(intargs[0] == 2 ) {
+            			
+            			// header
+                		try {
+					out.write("Flight Id,No Of Passenger");
+			            	out.newLine();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}   //acquring the first column
+                		
+                		DefaultTableModel model = new DefaultTableModel();
+            			model.addColumn("Flight Id");
+            			model.addColumn("No Of Passenger");
+            			
+            			for (String i : argsmap1.keySet()) {
+        	        	    //String temp[] = i.split(",");
+        	        	    Object[] data = {i,argsmap1.get(i)};
+        	        	    model.addRow(data);
+        	        	    
+        	        	    try {
+					out.write(i+","+argsmap1.get(i));
+					out.newLine();
+				    } catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+				    }   //acquring the first column
+        	        	    
+        	      	     	}
+            			
+                		table.setModel(model);	
+                		
+                		table.setModel(model);
+	                	if (scrollPane_2 != null) {
+	                		scrollPane_2.setVisible(false);
+	                	}
+	                	
+	                	if (scrollPane_3 != null) {
+                			scrollPane_3.setVisible(false);
+                		}
+            			
+                   	}
+            		else if(intargs[0] == 3 ) {
+            			
+            			// header
+                		try {
+					out.write("Flight Id,Total Miles");
+			            	out.newLine();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}   //acquring the first column
+                		
+                		DefaultTableModel model = new DefaultTableModel();
+                        	DefaultTableModel model_2 = new DefaultTableModel();
+                       		DefaultTableModel model_3 = new DefaultTableModel();
+                		
+            			model.addColumn("Flight Id");
+                		model.addColumn("Total Miles");
+                		
+                		for (String i : argsmap2[0].keySet()) {
+        	        	    Object[] data = {i,argsmap2[0].get(i)};
+        	        	    model.addRow(data);
+        	        	    
+        	        	    try {
+					out.write(i+","+argsmap2[0].get(i));
+					out.newLine();
+				    } catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				    }   //acquring the first column
+        	        	    
+        	      	     	}
+                		
+                		table.setModel(model);
+                		                		
+                		// header
+                		try {
+					out.write("Passenger Id,Total Miles");
+			            	out.newLine();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}   //acquring the first column
+                		
+                		model_2.addColumn("Passenger Id");
+                		model_2.addColumn("Total Miles");
+                		
+                		for (String i : argsmap2[1].keySet()) {
+        	        	    Object[] data = {i,argsmap2[1].get(i)};
+        	        	    model_2.addRow(data);
+        	        	    
+        	        	    try {
+					out.write(i+","+argsmap2[1].get(i));
+					out.newLine();
+				    } catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+				    }   //acquring the first column
+        	      	        }
+                		
+                		table_2.setModel(model_2);
+                		table_2.setPreferredScrollableViewportSize(new Dimension(500, 70));
+                		table_2.setFillsViewportHeight(true);            		
+                		scrollPane_2.setVisible(true);
+                		flightDetailPanel.add(scrollPane_2);
+                		
+                		
+                		// header
+                		try {
+					out.write("Passenger Id,Total Miles");
+			            	out.newLine();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}   //acquring the first column
+                		
+                		model_3.addColumn("Passenger Id");
+                		model_3.addColumn("Total Miles");
+                		
+                		for (String i : argsmap2[2].keySet()) {
+        	        	    Object[] data = {i,argsmap2[2].get(i)};
+        	        	    model_3.addRow(data);
+        	        	    
+        	        	    try {
+					out.write(i+","+argsmap2[2].get(i));
+					out.newLine();
+				    } catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				    }   //acquring the first column
+        	      	        }              		
+                		
+                		table_3.setModel(model_3);
+                		table_3.setPreferredScrollableViewportSize(new Dimension(500, 70));
+                		table_3.setFillsViewportHeight(true);            		
+                		scrollPane_3.setVisible(true);
+                		flightDetailPanel.add(scrollPane_3);
+                   	}
+
+            		try {
+				out.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}      			
+                	            	
+            		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
+            		table.setFillsViewportHeight(true); 
+            		scrollPane.setVisible(true);
+            		flightDetailPanel.add(scrollPane);
+            		
+            		flightDetails.getContentPane().add(BorderLayout.CENTER,flightDetailPanel); 
+            		flightDetails.setSize(800,800);
+            		flightDetails.setVisible(true);
+            	} 	
+            }
+          });
+        
+	flightDetails.setSize(700,700);
+	flightDetails.setVisible(true);
     }
   
 }
