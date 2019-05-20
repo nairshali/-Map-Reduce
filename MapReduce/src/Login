@@ -201,25 +201,31 @@ public class Login{
         btnLogin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 	try {
-                	   String passengerFile = args[0];
-                	
-			    FileInputStream fstream = new FileInputStream(passengerFile);
-			    // Use DataInputStream to read binary NOT text.
-	                    BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
-	                    String strLine;
-	                    passengerMap = new HashMap<String,Integer>();
-	                    
-	                    try {
-				while ((strLine = br.readLine()) != null) {
-					String temp[] = strLine.split(",");
-					passengerMap.put(temp[0], 1);
-					}
-							
-				br.close();
-				} catch (IOException e) {
-				// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+                	   	if ( args.length == 0 ) {
+	                		JOptionPane.showMessageDialog(null, "Please Login As Manager And Select Files");  
+	                		passengerframe.dispose();
+	                		System.exit(0);
+	                    	}
+	                    	else {
+	                		String passengerFile = args[0];
+	                		FileInputStream fstream = new FileInputStream(passengerFile);
+	                		// Use DataInputStream to read binary NOT text.
+	                		BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+	                		String strLine;
+	                		passengerMap = new HashMap<String,Integer>();
+		                    
+	                		try {
+	                			while ((strLine = br.readLine()) != null) {
+	                				String temp[] = strLine.split(",");
+	                				passengerMap.put(temp[0], 1);
+	                			}
+								
+	                		br.close();
+	                	 	} catch (IOException e) {
+	                			// TODO Auto-generated catch block
+	                			e.printStackTrace();
+	                	 	}
+	                     	}
 	                    
 			} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -232,16 +238,17 @@ public class Login{
                     passengerframe.dispose();
                     args[2] = strpassengerUsername.getText();
                     try {
-						FlightDetails.passengerDetailsGui(args);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-                  }else
-                  {
+				FlightDetails.passengerDetailsGui(args);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+                  }
+		  else{
                     JOptionPane.showMessageDialog(null, "Wrong Inputs", "Please Check", JOptionPane.WARNING_MESSAGE);
                     return;
                   }
+		  
                 }
               }); 
             
