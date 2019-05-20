@@ -53,6 +53,17 @@ public class FlightDetails {
 	JLabel lblPassengerDetails = new JLabel("PASSENGER DETAILS");
 	lblPassengerDetails.setBounds(153, 11, 148, 14);
 	passengerDetailsPanel.add(lblPassengerDetails);
+	    
+	JButton btnLogout = new JButton("Logout");
+	btnLogout.setBounds(167, 105, 91, 23);
+	passengerDetailsPanel.add(btnLogout);
+		
+	btnLogout.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+            	passengerDetails.dispose();
+            	Login.main(args);
+            }
+          });    
 		
         // Table
         final  JTable table = new JTable();
