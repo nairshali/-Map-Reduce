@@ -300,18 +300,29 @@ public class FlightDetails {
 	final  JTable table_3 = new JTable();        
 
 	//Create the scroll pane and add the table to it.
+	//Create the scroll pane and add the table to it.
 	JScrollPane scrollPane = new JScrollPane(table);
-	scrollPane.setBounds(111, 321, 464, 100);
+	scrollPane.setBounds(85, 321, 540, 100);
 	scrollPane.setVisible(false);
 		            		
 	JScrollPane scrollPane_2 = new JScrollPane(table_2);
-	scrollPane_2.setBounds(111, 427, 229, 100);
+	scrollPane_2.setBounds(85, 468, 255, 100);
 	scrollPane_2.setVisible(false);
 		
 	JScrollPane scrollPane_3 = new JScrollPane(table_3);
-	scrollPane_3.setBounds(355, 427, 220, 100);
+	scrollPane_3.setBounds(355, 468, 270, 100);
 	scrollPane_3.setVisible(false);
-        
+		
+	JLabel lblTotalTravelledByPassenger = new JLabel("Total Travelled By Each Passenger");
+	lblTotalTravelledByPassenger.setBounds(100, 448, 229, 14);
+	flightDetailPanel.add(lblTotalTravelledByPassenger);
+	lblTotalTravelledByPassenger.setVisible(false);
+		
+	JLabel lblHighestMiles = new JLabel("Passenger Having Earned The Highest Air Miles");
+	lblHighestMiles.setBounds(366, 448, 243, 14);
+	flightDetailPanel.add(lblHighestMiles);
+	lblHighestMiles.setVisible(false);
+	    
        btnSubmit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
             	
@@ -319,6 +330,9 @@ public class FlightDetails {
                 argsmap2[0] = new HashMap<String,Double>();
                 argsmap2[1] = new HashMap<String,Double>();
                 argsmap2[2] = new HashMap<String,Double>();
+		    
+		lblTotalTravelledByPassenger.setVisible(false);
+                lblHighestMiles.setVisible(false);    
             	
             	intargs[0] = CBTasks.getSelectedIndex(); // Job Id
             	
@@ -495,7 +509,9 @@ public class FlightDetails {
             			
                    	}
             		else if(intargs[0] == 3 ) {
-            			
+            			lblTotalTravelledByPassenger.setVisible(true);
+                		lblHighestMiles.setVisible(true);
+				
             			// header
                 		try {
 					out.write("Flight Id,Total Miles");
