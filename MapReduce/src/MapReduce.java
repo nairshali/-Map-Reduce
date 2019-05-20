@@ -31,14 +31,23 @@ public class MapReduce {
     public static  Map<String,String> mapAirport = null;
     public static  Map<String,String> mapAirportNames = null;
     public static  Map<String,Integer> mapAirportIATA = null;
+	
     // cleaning
     public static List<String> passengerDataFile = new ArrayList<>();
     // file split
     public static List<String> dataFile = new ArrayList<>();
     public static List<String>[] arrayOfdataFile;
-    // Map data file
+     // Map data file
     public static List<String> mapDataFile = new ArrayList<>();
     public static List<String>[] arrayOfmapDataFile;
+    
+    // interim results
+    public static List<String> interimDataFile = new ArrayList<>();
+    
+    //SortShuffleDataFile
+    public static List<String> sortShuffleDataFile = new ArrayList<>();
+    public static List<String>[] arrayOfsortShuffleDataFile;
+	
     public static  HashMap<String, Integer> map1 = new HashMap<String,Integer>();
     public static  HashMap<String, Integer> map2 = new HashMap<String,Integer>();
     
@@ -64,10 +73,10 @@ public class MapReduce {
     public static void reduce(HashMap<String, Integer> argsmap1, HashMap<String, Double> argsmap2[]) throws Exception {
     
         map2 = new HashMap<String,Integer>();
-	System.out.println("arrayOfmapDataFile.length" + arrayOfmapDataFile.length);
+	System.out.println("arrayOfsortShuffleDataFile" + arrayOfsortShuffleDataFile.length);
 		
-	for (int i = 0; i < arrayOfmapDataFile.length; i++) {
-		List<String> list = arrayOfmapDataFile[i];
+	for (int i = 0; i < arrayOfsortShuffleDataFile.length; i++) {
+		List<String> list = arrayOfsortShuffleDataFile[i];
 
 		System.out.println("list.size()" + list.size());
 			
@@ -162,7 +171,54 @@ public class MapReduce {
         
         System.out.println("done 4");
     }
-	
+    
+    public static void sortShuffle(int files) throws Exception {
+    		
+    	// Initialize
+    	interimDataFile = new ArrayList<>();
+    	sortShuffleDataFile = new ArrayList<>();
+    	
+    	for (int i = 0; i < arrayOfmapDataFile.length; i++) {
+    		List<String> list = arrayOfmapDataFile[i];
+    		interimDataFile.addAll(list);    	    
+    	}
+       
+       // sort and Shuffle
+       interimDataFile.sort(null);
+       //System.out.println("interimDataFile"+ interimDataFile.size());
+       
+       // spilt data
+       int count = interimDataFile.size() - 1;
+       int lines = 0;
+       int filecnt = 0;
+       System.out.println("count"+ count);
+       
+       if((count%files)==0){  
+    	      lines = (count/files);  
+    	 }  
+    	 else{  
+    	      lines = ( (count+1) /files);  
+    	 } 
+    	
+       for (int k = 0; k < interimDataFile.size(); k++) {
+    	   //mapDataFile.add(i + "," + map1.get(i));
+    	   System.out.println("interimDataFile"+ interimDataFile.get(k));
+    	   
+    	   String strLine = interimDataFile.get(k);   
+    	   sortShuffleDataFile.add(strLine);
+    	   //System.out.println("k % lines" + k + " " + lines+ " " + k % lines);
+    	   if( (k % lines == 0) && (k != 0) ){ 
+    		  //System.out.println("k % lines" + k + " " + lines);
+    	      //System.out.println("sortShuffleDataFile" + sortShuffleDataFile.size());	
+    	      arrayOfsortShuffleDataFile[filecnt] = sortShuffleDataFile;
+    	      //System.out.println("i " + j + lines);
+    	      sortShuffleDataFile  = new ArrayList<>();
+    	      filecnt++;
+    	      //System.out.println("filecnt " + filecnt);
+    	   }
+        }
+       
+    }	
     public static void readFileandMap(int fileNo ) throws Exception {
 
 	// Initialize
@@ -243,6 +299,8 @@ public class MapReduce {
 	arrayOfdataFile = new List[files];
 	// file map
 	arrayOfmapDataFile = new List[files];
+	// sort shuffle
+	arrayOfsortShuffleDataFile = new List[files];
 	
 	if((count%files)==0){  
 	      lines = (count/files);  
@@ -398,6 +456,9 @@ public class MapReduce {
 			count += futureTask.get();
 				            
 			if (count == threadNum) {
+				// sort Shuffle
+				MapReduce.sortShuffle(threadNum);
+				// Reducer
 				MapReduce.reduce(argsmap1, argsmap2);
 			}
 		}
