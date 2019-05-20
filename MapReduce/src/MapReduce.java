@@ -371,30 +371,40 @@ public class MapReduce {
 	    while ((strLine = br.readLine()) != null) {
 	    	String temp[] = strLine.split(",");
 		 if ( temp[0].isEmpty() ){
-		     System.out.println("ERROR : Empty Records ");
-		     out.write("ERROR : Empty Records");
-	             out.newLine();
+			System.out.println("ERROR : Empty Records ");
+			out.write("ERROR : Empty Records");
+		        out.newLine();
 		  }
 		  else if (temp[0].matches("^[A-Z]{3}\\d{4}[A-Z]{2}\\d{1}") == false ) {
-		     System.out.println("ERROR Passenger ID:" + temp[0]);
-		     out.write("ERROR Passenger ID:" + temp[0]);
-		     out.newLine();  
+			 System.out.println("ERROR Passenger ID : " + temp[0]);
+			 out.write("ERROR Passenger ID : " + temp[0]);
+			 out.newLine();  
 		  }
 		  else if (temp[1].matches("^[A-Z]{3}\\d{4}[A-Z]{1}") == false ) {
-		     System.out.println("ERROR Flight ID" + temp[1]);
-		     out.write("ERROR Flight ID" + temp[1]);
-	             out.newLine();	  
+			 System.out.println("ERROR Flight ID : " + temp[1]);
+			 out.write("ERROR Flight ID : " + temp[1]);
+		         out.newLine();	  
 		  }
 		  else if (temp[2].matches("^[A-Z]{3}") == false ) {
-		     System.out.println("From airport IATA/FAA code:" + temp[2]);
-		     out.write("From airport IATA/FAA code:" + temp[2]);
-		     out.newLine();	  
+			 System.out.println("ERROR From airport IATA/FAA code : " + temp[2]);
+			 out.write("ERROR From airport IATA/FAA code : " + temp[2]);
+			 out.newLine();	  
 		  }
 		  else if (temp[3].matches("^[A-Z]{3}") == false ) {
-		     System.out.println("Destination airport IATA/FAA code:" + temp[3]);
-		     out.write("Destination airport IATA/FAA code:" + temp[3]);
-	             out.newLine();	  
+			  System.out.println("ERROR Destination airport IATA/FAA code : " + temp[3]);
+			  out.write("ERROR Destination airport IATA/FAA code : " + temp[3]);
+		          out.newLine();	  
 		  }
+		  else if (mapAirportNames.get(temp[2]) == null ) {
+			System.out.println("ERROR Passenger From airport IATA/FAA code does not exists : " + temp[2]);
+			out.write("ERROR Passenger From airport IATA/FAA code : " + temp[2]);
+			out.newLine();	  
+		  }
+	  	  else if (mapAirportNames.get(temp[3]) == null ) {
+			System.out.println("ERROR Passenger Destination airport IATA/FAA code does not exists : " + temp[3]);
+			out.write("ERROR Passenger Destination airport airport IATA/FAA code : " + temp[3]);
+			out.newLine();	  
+	          }
 		  else {
 		     passengerDataFile.add(strLine);
 		  }
