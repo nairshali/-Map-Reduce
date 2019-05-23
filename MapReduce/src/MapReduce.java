@@ -332,7 +332,19 @@ public class MapReduce {
    }
 
    public static void cleansing(String inputfile) throws IOException {
-    	
+    	// Record No
+	int recNo = 1;
+	// Error File
+	FileWriter fstream1 = null;
+	try {
+		fstream1 = new FileWriter(passengerFile.substring(0, passengerFile.lastIndexOf("\\")+1)+ "ERRORFILE.txt");
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+				
+	BufferedWriter out = new BufferedWriter(fstream1); 
+	   
 	// read airport data    
 	mapAirport = new HashMap<String,String>();
 	mapAirportNames = new HashMap<String,String>();
@@ -344,9 +356,39 @@ public class MapReduce {
 	BufferedReader br1 = new BufferedReader(new InputStreamReader(fstream2));
 	while ((strLine1 = br1.readLine()) != null) {
 		String temp[] = strLine1.split(",");
-		mapAirport.put( temp[1],temp[2]+"," +temp[3]);
-		mapAirportNames.put(temp[1],temp[0]);
-		mapAirportIATA.put(temp[1],0);
+		if ( strLine1.isEmpty() ){
+			System.out.println("Airport File :: Record NO : " + recNo + " :: Empty Records");
+			out.write("Airport File :: Record NO : " + recNo + " :: Empty Records ");
+		        out.newLine();
+		}
+		else if ( temp[0].matches("[A-Z/ //]{3,20}") == false ){
+			System.out.println("Airport File :: Record NO : " + recNo + " :: Airport Name : " + temp[0]);
+			out.write("Airport File :: Record NO : " + recNo + " :: Airport Name : " + temp[0]);
+		        out.newLine();
+		}
+		else if ( temp[1].matches("^[A-Z]{3}") == false ){
+			System.out.println("Airport File :: Record NO : " + recNo + " :: Airport IATA/FAA code : " + temp[1]);
+			out.write("Airport File :: Record NO : " + recNo + " :: Airport IATA/FAA code : " + temp[1]);
+		        out.newLine();
+		}
+		else if ( temp[2].replaceAll("[./-]", "").matches("\\d{3,13}") == false ){
+			System.out.println("Airport File :: Record NO : " + recNo + " :: Latitude : " + temp[2]);
+			out.write("Airport File :: Record NO : " + recNo + " :: Latitude : " + temp[2]);
+		        out.newLine();
+		}
+		else if ( temp[3].replaceAll("[./-]", "").matches("\\d{3,13}")  == false ){
+			System.out.println("Airport File :: Record NO : " + recNo + " :: Longitude : " + temp[3]);
+			out.write("Airport File :: Record NO : " + recNo + " :: Longitude : " + temp[3]);
+		       	out.newLine();
+		}
+		else {
+		      mapAirport.put( temp[1],temp[2]+"," +temp[3]);
+		      mapAirportNames.put(temp[1],temp[0]);
+		      mapAirportIATA.put(temp[1],0);
+		}
+		// increment record no     
+		recNo++; 
+
 	}	        
 	br1.close();
 
@@ -357,57 +399,59 @@ public class MapReduce {
     	
     	BufferedReader br = new BufferedReader(new FileReader(inputfile)); //reader for input file intitialized only once
 	String strLine = null;
-    	
-	// Error File
-	FileWriter fstream1 = null;
-	try {
-		fstream1 = new FileWriter(inputfile.substring(0, inputfile.lastIndexOf("\\")+1)+ "ERRORFILE.txt");
-	} catch (IOException e) {
-	// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-		
-        BufferedWriter out = new BufferedWriter(fstream1); 
+	recNo = 0;
 	    while ((strLine = br.readLine()) != null) {
 	    	String temp[] = strLine.split(",");
-		 if ( temp[0].isEmpty() ){
-			System.out.println("ERROR : Empty Records ");
-			out.write("ERROR : Empty Records");
-		        out.newLine();
-		  }
-		  else if (temp[0].matches("^[A-Z]{3}\\d{4}[A-Z]{2}\\d{1}") == false ) {
-			 System.out.println("ERROR Passenger ID : " + temp[0]);
-			 out.write("ERROR Passenger ID : " + temp[0]);
-			 out.newLine();  
-		  }
-		  else if (temp[1].matches("^[A-Z]{3}\\d{4}[A-Z]{1}") == false ) {
-			 System.out.println("ERROR Flight ID : " + temp[1]);
-			 out.write("ERROR Flight ID : " + temp[1]);
-		         out.newLine();	  
-		  }
-		  else if (temp[2].matches("^[A-Z]{3}") == false ) {
-			 System.out.println("ERROR From airport IATA/FAA code : " + temp[2]);
-			 out.write("ERROR From airport IATA/FAA code : " + temp[2]);
-			 out.newLine();	  
-		  }
-		  else if (temp[3].matches("^[A-Z]{3}") == false ) {
-			  System.out.println("ERROR Destination airport IATA/FAA code : " + temp[3]);
-			  out.write("ERROR Destination airport IATA/FAA code : " + temp[3]);
-		          out.newLine();	  
-		  }
-		  else if (mapAirportNames.get(temp[2]) == null ) {
-			System.out.println("ERROR Passenger From airport IATA/FAA code does not exists : " + temp[2]);
-			out.write("ERROR Passenger From airport IATA/FAA code : " + temp[2]);
-			out.newLine();	  
-		  }
-	  	  else if (mapAirportNames.get(temp[3]) == null ) {
-			System.out.println("ERROR Passenger Destination airport IATA/FAA code does not exists : " + temp[3]);
-			out.write("ERROR Passenger Destination airport airport IATA/FAA code : " + temp[3]);
-			out.newLine();	  
-	          }
-		  else {
-		     passengerDataFile.add(strLine);
-		  }
+		 if ( temp[0].isEmpty() && temp[1].isEmpty() && temp[2].isEmpty()  && temp[3].isEmpty() ){
+			     System.out.println("Passenger File :: Record NO : " + recNo + " :: Empty Records ");
+			     out.write("Passenger File :: Record NO : " + recNo + " :: Empty Records");
+		         out.newLine();
+			  }
+			  else if (temp[0].matches("^[A-Z]{3}\\d{4}[A-Z]{2}\\d{1}") == false ) {
+			     System.out.println("Passenger File :: Record NO : " + recNo + " :: Passenger ID : " + temp[0]);
+			     out.write("Passenger File :: Record NO : " + recNo + " :: Passenger ID : " + temp[0]);
+			     out.newLine();  
+			  }
+			  else if (temp[1].matches("^[A-Z]{3}\\d{4}[A-Z]{1}") == false ) {
+			     System.out.println("Passenger File :: Flight ID : " + temp[1]);
+			     out.write("Passenger File :: Record NO : " + recNo + " :: Flight ID : " + temp[1]);
+		             out.newLine();	  
+			  }
+			  else if (temp[2].matches("^[A-Z]{3}") == false ) {
+			     System.out.println("Passenger File :: Record NO : " + recNo + " :: From airport IATA/FAA code : " + temp[2]);
+			     out.write("Passenger File :: Record NO : " + recNo + " :: From airport IATA/FAA code : " + temp[2]);
+			     out.newLine();	  
+			  }
+			  else if (temp[3].matches("^[A-Z]{3}") == false ) {
+			     System.out.println("Passenger File :: Record NO : " + recNo + " :: Destination airport IATA/FAA code : " + temp[3]);
+			     out.write("Passenger File :: Record NO : " + recNo + " :: Destination airport IATA/FAA code : " + temp[3]);
+		             out.newLine();	  
+			  }
+			  else if (temp[4].matches("\\d{10}") == false ) {
+				     System.out.println("Passenger File :: Record NO : " + recNo + " :: Departure time (GMT) : " + temp[4]);
+				     out.write("Passenger File :: Record NO : " + recNo + " :: Departure time (GMT) : " + temp[4]);
+			         out.newLine();	  
+				  }
+			  else if (temp[5].matches("\\d{1,4}") == false ) {
+				     System.out.println("Passenger File :: Record NO : " + recNo + " :: Total flight time (mins) : " + temp[5]);
+				     out.write("Passenger File :: Record NO : " + recNo + " :: Total flight time (mins) : " + temp[5]);
+			         out.newLine();	  
+				  }
+			  else if (mapAirportNames.get(temp[2]) == null ) {
+				     System.out.println("Passenger File :: Record NO : " + recNo + " :: Passenger From airport IATA/FAA code does not exists : " + temp[2]);
+				     out.write("Passenger File :: Record NO : " + recNo + " :: Passenger From airport IATA/FAA code : " + temp[2]);
+			         out.newLine();	  
+			  }
+			  else if (mapAirportNames.get(temp[3]) == null ) {
+				     System.out.println("Passenger File :: Record NO : " + recNo + " :: Passenger Destination airport IATA/FAA code does not exists : " + temp[3]);
+				     out.write("Passenger File :: Record NO : " + recNo + " :: Passenger Destination airport airport IATA/FAA code : " + temp[3]);
+			         out.newLine();	  
+			  }
+			  else {
+			     passengerDataFile.add(strLine);
+			  }
+			 
+			 recNo++; 
 	    }    
 	    br.close(); 
 	    out.close();
