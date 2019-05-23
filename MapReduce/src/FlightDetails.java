@@ -128,7 +128,7 @@ public class FlightDetails {
         flightDetailPanel.add(strPassengerDetails);
         strPassengerDetails.setColumns(10);
 		
-	JButton btnPassengerDetails = new JButton("Select File");
+	JButton btnPassengerDetails = new JButton("Select");
 	btnPassengerDetails.setBounds(534, 36, 91, 23);
 	flightDetailPanel.add(btnPassengerDetails);		
 
@@ -141,7 +141,7 @@ public class FlightDetails {
 	flightDetailPanel.add(strAirportDetails);
 	strAirportDetails.setColumns(10);
 		
-	JButton btnAirportDetails = new JButton("Select File");
+	JButton btnAirportDetails = new JButton("Select");
 	btnAirportDetails.setBounds(534, 61, 91, 23);
 	flightDetailPanel.add(btnAirportDetails);
 		
@@ -561,6 +561,7 @@ public class FlightDetails {
         	        	    model_2.addRow(data);
         	        	    
         	        	    try {
+					out.newLine();    
 					out.write(i+","+argsmap2[1].get(i));
 					out.newLine();
 				    } catch (IOException e) {
@@ -578,7 +579,8 @@ public class FlightDetails {
                 		
                 		// header
                 		try {
-					out.write("Passenger Id,Total Miles");
+					out.newLine();
+					out.write("Passenger Id,"Highest Total Miles"");
 			            	out.newLine();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -586,7 +588,7 @@ public class FlightDetails {
 				}   //acquring the first column
                 		
                 		model_3.addColumn("Passenger Id");
-                		model_3.addColumn("Total Miles");
+                		model_3.addColumn("Highest Total Miles");
                 		
                 		for (String i : argsmap2[2].keySet()) {
         	        	    Object[] data = {i,argsmap2[2].get(i)};
