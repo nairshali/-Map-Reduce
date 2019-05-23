@@ -40,7 +40,11 @@ public class MapReduce {
      // Map data file
     public static List<String> mapDataFile = new ArrayList<>();
     public static List<String>[] arrayOfmapDataFile;
-    
+	
+    // Combine data file
+    public static List<String> combineDataFile = new ArrayList<>();
+    public static List<String>[] arrayOfCombineDataFile;
+	
     // interim results
     public static List<String> interimDataFile = new ArrayList<>();
     
@@ -178,8 +182,8 @@ public class MapReduce {
     	interimDataFile = new ArrayList<>();
     	sortShuffleDataFile = new ArrayList<>();
     	
-    	for (int i = 0; i < arrayOfmapDataFile.length; i++) {
-    		List<String> list = arrayOfmapDataFile[i];
+    	for (int i = 0; i < arrayOfCombineDataFile.length; i++) {
+    		List<String> list = arrayOfCombineDataFile[i];
     		interimDataFile.addAll(list);    	    
     	}
        
@@ -218,7 +222,39 @@ public class MapReduce {
     	   }
         }
        
-    }	
+    }
+   
+    public static void combine (int fileNo ) throws Exception {
+    	// Initialize
+    	combineDataFile = new ArrayList<>();
+    				
+        System.out.println("list fileNo"+ fileNo);
+
+        System.out.println("arrayOfmapDataFile[fileNo]"+ arrayOfmapDataFile[fileNo].size());
+	    
+        // read passenger data    
+        List<String> list = arrayOfmapDataFile[fileNo];
+
+        System.out.println("list"+ list.size());
+        map1 = new HashMap<String,Integer>();
+        
+	// Combine Key,Value
+	for (int i = 0; i < list.size(); i++) {
+            String temp[] = list.get(i).split(",");
+            map1.put(temp[0], Integer.parseInt(temp[1]));        
+        }
+
+       System.out.println("map1"+ map1.size());
+       
+       // Save result into intermediate
+       for (String i : map1.keySet()) {
+    	   combineDataFile.add(i + "," + map1.get(i));
+       }
+
+        System.out.println("combineDataFile"+ combineDataFile.size());
+        arrayOfCombineDataFile[fileNo] = combineDataFile;
+    }
+	
     public static void readFileandMap(int fileNo ) throws Exception {
 
 	// Initialize
@@ -233,7 +269,7 @@ public class MapReduce {
             String temp[] = list.get(i).split(",");
 		
             if (jobId == 0) {
-                map1.put( temp[2]+"-"+temp[1], 1);
+                mapDataFile.add(temp[2]+"-"+temp[1] + "," + 1);
             }
             else if (jobId == 1) {
                 if ( temp[1].compareTo(flightId) == 0 ) {
@@ -253,11 +289,11 @@ public class MapReduce {
     	            	//String flightTime = formatter.format(time1);
     	            	System.out.println(flightTime);
     	            	
-                	map1.put( temp[0]+"-"+temp[2]+"-"+ temp[3]+"-"+depatureTime+"-"+arrivalTime+"-"+flightTime, 1);
+                	mapDataFile.add(temp[0]+"-"+temp[2]+"-"+ temp[3]+"-"+depatureTime+"-"+arrivalTime+"-"+flightTime + "," + 1);
                 }
             }
             else if (jobId == 2) {
-               	map1.put( temp[1]+"-"+temp[0], 1);
+               	mapDataFile.add(temp[1]+"-"+temp[0] + "," + 1);
             }
             else if (jobId == 3) {
                 String temp1[] = mapAirport.get(temp[2]).split(","); 
@@ -273,7 +309,7 @@ public class MapReduce {
                 try {
                 	String strNautical = temp[1] +"-"+ temp[0] +"-"+ Math.round(nauticalmiles*100)/100;
                 	if ( map1.get(strNautical)  == null ) {
-                		map1.put( strNautical, 1);
+                             mapDataFile.add(strNautical + "," + 1);
 			}
     		} catch (Exception e) {
     			e.printStackTrace();
@@ -281,10 +317,6 @@ public class MapReduce {
             }          
        }
  
-       for (String i : map1.keySet()) {
-	   mapDataFile.add(i + "," + map1.get(i));
-        }
-
         System.out.println("mapDataFile"+ mapDataFile.size());
         arrayOfmapDataFile[fileNo] = mapDataFile;
     }
@@ -299,6 +331,8 @@ public class MapReduce {
 	arrayOfdataFile = new List[files];
 	// file map
 	arrayOfmapDataFile = new List[files];
+	// combiner
+	arrayOfCombineDataFile = new List[files];     
 	// sort shuffle
 	arrayOfsortShuffleDataFile = new List[files];
 	
@@ -478,7 +512,7 @@ public class MapReduce {
 	     cleansing(passengerFile);
 	    // Step 2: Split files into multiple files or parallel processing
 	     FileSplit(threadNum);
-	    // Step 3: Mapper 
+	    // Step 3: Map/COmbiner and Parallel Execution
              try {
 		for (int i=0;i<threadNum;i++) { 	
 			int fileNo = i; // files
@@ -489,7 +523,10 @@ public class MapReduce {
 				@Override
 				public Integer call() {
 					try {
-					     MapReduce.readFileandMap(fileNo);
+					     // Mapper
+						MapReduce.readFileandMap(fileNo);
+					     // Combiner
+					        MapReduce.combine(fileNo);
 					} 
 					catch (Exception e) {
 					     // TODO Auto-generated catch block
@@ -510,9 +547,9 @@ public class MapReduce {
 			count += futureTask.get();
 				            
 			if (count == threadNum) {
-				// sort Shuffle
+				// Step 4: sort Shuffle 
 				MapReduce.sortShuffle(threadNum);
-				// Reducer
+				// Step 5: Reducer
 				MapReduce.reduce(argsmap1, argsmap2);
 			}
 		}
