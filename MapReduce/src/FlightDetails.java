@@ -164,7 +164,10 @@ public class FlightDetails {
 	listFlightId.setBounds(85, 162, 138, 60);
 	flightDetailPanel.add(listFlightId);
 	listFlightId.setVisible(false);
-		
+	
+        //Create the scroll pane and add the table to it.
+        JScrollPane scrollPane_1 = new JScrollPane(listFlightId);
+        	
 	JLabel lblNoOfThreads = new JLabel("No Of Threads");
 	lblNoOfThreads.setBounds(432, 118, 100, 14);
 	flightDetailPanel.add(lblNoOfThreads);
@@ -232,10 +235,7 @@ public class FlightDetails {
        
 	CBTasks.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
- 
-            	//Create the scroll pane and add the table to it.
-        	JScrollPane scrollPane_1 = new JScrollPane(listFlightId);
-        		
+ 	
             	if(CBTasks.getSelectedIndex() == 1 ) {
             		if (strargs[0] == null) {
                 		JOptionPane.showMessageDialog(null, "Please Select Passenger Details File");
@@ -410,6 +410,9 @@ public class FlightDetails {
                 		 
 	                	table.setModel(model);
 				
+				if (scrollPane_1 != null) {
+                    			scrollPane_1.setVisible(false);
+                    		}
 	                	if (scrollPane_2 != null) {
 	                		scrollPane_2.setVisible(false);
 	                	}
@@ -499,7 +502,10 @@ public class FlightDetails {
             			
                 		table.setModel(model);	
                 		
-                		table.setModel(model);
+                		if (scrollPane_1 != null) {
+                    			scrollPane_1.setVisible(false);
+                    		}
+				
 	                	if (scrollPane_2 != null) {
 	                		scrollPane_2.setVisible(false);
 	                	}
@@ -510,7 +516,12 @@ public class FlightDetails {
             			
                    	}
             		else if(intargs[0] == 3 ) {
-            			lblTotalTravelledByPassenger.setVisible(true);
+            			
+				if (scrollPane_1 != null) {
+                    			scrollPane_1.setVisible(false);
+                    		}
+				
+				lblTotalTravelledByPassenger.setVisible(true);
                 		lblHighestMiles.setVisible(true);
 				
             			// header
