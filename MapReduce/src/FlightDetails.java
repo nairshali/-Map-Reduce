@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 //import net.miginfocom.swing.MigLayout;
 import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.Map;
 
 public class FlightDetails {
@@ -29,9 +30,9 @@ public class FlightDetails {
     public static String strargs[] = new String[3];
     public static int intargs[] = new int[2];
     //public static HashMap<String, Integer> argsmap1[] = null;
-    public static HashMap<String, Double> argsmap2[] = new HashMap[3];
-    public static HashMap<String, Integer> argsmap1 = null;
-    public static HashMap<String, String> listmap = new HashMap<String, String>();
+    public static TreeMap<String, Double> argsmap2[] = new TreeMap[3];
+    public static TreeMap<String, Integer> argsmap1 = null;
+    public static TreeMap<String, String> listmap = new TreeMap<String, String>();
     //public static HashMap<String, Double> argsmap2 = null;
     
     public static void main(String[] args){
@@ -76,9 +77,9 @@ public class FlightDetails {
 
         intargs[0] = 3; // job ID
         intargs[1] = 2; // Parallel Process
-        argsmap2[0] = new HashMap<String,Double>();
-        argsmap2[1] = new HashMap<String,Double>();
-        argsmap2[2] = new HashMap<String,Double>();
+        argsmap2[0] = new TreeMap<String,Double>();
+        argsmap2[1] = new TreeMap<String,Double>();
+        argsmap2[2] = new TreeMap<String,Double>();
 	MapReduce.main(intargs,args,argsmap1,argsmap2); 
 		
 	model.addColumn("Passenger Id");
@@ -326,10 +327,10 @@ public class FlightDetails {
        btnSubmit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
             	
-            	argsmap1 = new HashMap<String,Integer>();
-                argsmap2[0] = new HashMap<String,Double>();
-                argsmap2[1] = new HashMap<String,Double>();
-                argsmap2[2] = new HashMap<String,Double>();
+            	argsmap1 = new TreeMap<String,Integer>();
+                argsmap2[0] = new TreeMap<String,Double>();
+                argsmap2[1] = new TreeMap<String,Double>();
+                argsmap2[2] = new TreeMap<String,Double>();
 		    
 		lblTotalTravelledByPassenger.setVisible(false);
                 lblHighestMiles.setVisible(false);    
