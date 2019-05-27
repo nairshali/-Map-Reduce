@@ -580,7 +580,7 @@ public class FlightDetails {
                 		// header
                 		try {
 					out.newLine();
-					out.write("Passenger Id,"Highest Total Miles"");
+					out.write("Passenger Id,Highest Total Miles");
 			            	out.newLine();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
