@@ -202,7 +202,7 @@ public class Login{
             public void actionPerformed(ActionEvent event) {
                 	try {
                 	   	if ( args.length == 0 ) {
-	                		JOptionPane.showMessageDialog(null, "Please Login As Manager And Select Files");  
+	                		JOptionPane.showMessageDialog(null, "Please Login As Manager, Select Files And Logout");  
 	                		passengerframe.dispose();
 	                		System.exit(0);
 	                    	}
