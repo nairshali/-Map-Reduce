@@ -18,7 +18,7 @@ public class Login{
      
     public static void main(String args[]){
     	Login gui = new Login();
-      gui.MainFrame(args);
+        gui.MainFrame(args);
         
     }
     
