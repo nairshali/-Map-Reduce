@@ -3,6 +3,7 @@ package MapReduce;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.Scanner;
 
 //
@@ -74,7 +75,7 @@ public class MapReduce {
     	  return (rad * 180.0 / Math.PI);
     }
 
-    public static void reduce(HashMap<String, Integer> argsmap1, HashMap<String, Double> argsmap2[]) throws Exception {
+    public static void reduce(TreeMap<String, Integer> argsmap1, TreeMap<String, Double> argsmap2[]) throws Exception {
     
         map2 = new HashMap<String,Integer>();
 	System.out.println("arrayOfsortShuffleDataFile" + arrayOfsortShuffleDataFile.length);
@@ -160,20 +161,22 @@ public class MapReduce {
 	        	      //System.out.println(map3.get(temp[1]));
 	        	      argsmap2[1].put(temp[1], argsmap2[1].get(temp[1]) + naut);			
 	        	}
-	        	
-	        	// Highest Traveller Nautical
-	        	Double maxValueInMap=(Collections.max(argsmap2[1].values()));
-	        	for (String i1 : argsmap2[1].keySet()) {
-	        	    if (argsmap2[1].get(i1) == maxValueInMap) {
-	                    	System.out.println("MaxValue" + maxValueInMap);     // Print the key with max value
-	                    	argsmap2[2].put(i1, maxValueInMap);
-	                    }
-	        	}	        	
+	        	        	
 	      	}
+
+	       	// Highest Traveller Nautical
+	       	Double maxValueInMap=(Collections.max(argsmap2[1].values()));
+	       	for (String i1 : argsmap2[1].keySet()) {
+	       		System.out.println("i1" + i1 + " " + argsmap2[1].get(i1)); 
+	       	    if (argsmap2[1].get(i1) == maxValueInMap) {
+	       	    	    System.out.println("argsmap2[1].get(i1)" + argsmap2[1].get(i1)); 
+	                   	System.out.println("MaxValue" + maxValueInMap);     // Print the key with max value
+	                   	argsmap2[2].put(i1, maxValueInMap);
+	                   }
+	       	}	
     	   
        }
         
-        System.out.println("done 4");
     }
     
     public static void sortShuffle(int files) throws Exception {
@@ -491,7 +494,7 @@ public class MapReduce {
 	    out.close();
   	}
 
-   public static void main(int args[], String argstr[], HashMap<String, Integer> argsmap1, HashMap<String, Double> argsmap2[]) { 
+   public static void main(int args[], String argstr[], TreeMap<String, Integer> argsmap1, TreeMap<String, Double> argsmap2[]) { 
 	
 	// variable intialization
 	int count = 0; 			
