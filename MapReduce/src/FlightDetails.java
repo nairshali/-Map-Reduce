@@ -58,6 +58,10 @@ public class FlightDetails {
 	JButton btnLogout = new JButton("Logout");
 	btnLogout.setBounds(167, 105, 91, 23);
 	passengerDetailsPanel.add(btnLogout);
+	// to work with key board button press
+        InputMap bl = btnLogout.getInputMap();
+        bl.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "pressed");
+        bl.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true), "released");
 		
 	btnLogout.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
@@ -131,7 +135,11 @@ public class FlightDetails {
 		
 	JButton btnPassengerDetails = new JButton("Select");
 	btnPassengerDetails.setBounds(534, 36, 91, 23);
-	flightDetailPanel.add(btnPassengerDetails);		
+	flightDetailPanel.add(btnPassengerDetails);
+	// to work with key board button press
+        InputMap bd = btnPassengerDetails.getInputMap();
+        bd.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "pressed");
+        bd.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true), "released");    
 
         JLabel lblAirportDetails = new JLabel("Airport Details File :");
         lblAirportDetails.setBounds(10, 65, 131, 14);
@@ -145,6 +153,10 @@ public class FlightDetails {
 	JButton btnAirportDetails = new JButton("Select");
 	btnAirportDetails.setBounds(534, 61, 91, 23);
 	flightDetailPanel.add(btnAirportDetails);
+	// to work with key board button press
+        InputMap ad = btnAirportDetails.getInputMap();
+        ad.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "pressed");
+        ad.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true), "released");
 		
 	JLabel lblTasks = new JLabel("Tasks :");
 	lblTasks.setBounds(23, 118, 46, 14);
@@ -180,10 +192,18 @@ public class FlightDetails {
 	JButton btnSubmit = new JButton("Submit");
 	btnSubmit.setBounds(185, 260, 91, 23);
 	flightDetailPanel.add(btnSubmit);
+	// to work with key board button press
+        InputMap bs = btnSubmit.getInputMap();
+        bs.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "pressed");
+        bs.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true), "released");
 		
 	JButton btnLogout = new JButton("Logout");
 	btnLogout.setBounds(408, 260, 91, 23);
 	flightDetailPanel.add(btnLogout);
+	// to work with key board button press
+        InputMap bl = btnLogout.getInputMap();
+        bl.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "pressed");
+        bl.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true), "released");
 	
 	JLabel lblFlightDetails = new JLabel("FLIGHT DETAILS");
 	lblFlightDetails.setBounds(288, 11, 111, 14);
