@@ -43,6 +43,11 @@ public class Login{
         
         // Employer Login 
         JButton employerLogin = new JButton("Employer Login");
+	// to work with key board button press
+        InputMap el = employerLogin.getInputMap();
+        el.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "pressed");
+        el.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true), "released");
+	
         employerLogin.setFont(new Font("Serif", Font.BOLD, 14));
         employerLogin.setPreferredSize(new Dimension(140, 20));
         employerLogin.addActionListener(new ActionListener() {
@@ -57,8 +62,13 @@ public class Login{
         c.gridy = 2;
         mainPanel.add(employerLogin,c);
         
-     // Passenger Login 
+        // Passenger Login 
         JButton passengerLogin = new JButton("Traveller Login");
+	// to work with key board button press
+        InputMap pl = passengerLogin.getInputMap();
+        pl.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "pressed");
+        pl.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true), "released");
+	
         passengerLogin.setFont(new Font("Serif", Font.BOLD, 14));
         passengerLogin.setPreferredSize(new Dimension(140, 20));
         passengerLogin.addActionListener(new ActionListener() {
@@ -110,12 +120,24 @@ public class Login{
     	JButton btnLogin = new JButton("Login");
     	btnLogin.setBounds(10, 105, 91, 23);
     	employerpanel.add(btnLogin);
+	// to work with key board button press
+        InputMap bl = btnLogin.getInputMap();
+        bl.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "pressed");
+        bl.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true), "released");
     		
     	JButton btnReset = new JButton("Reset");
+	// to work with key board button press
+        InputMap br = btnReset.getInputMap();
+        br.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "pressed");
+        br.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true), "released");
     	btnReset.setBounds(120, 105, 91, 23);
     	employerpanel.add(btnReset);
     		
     	JButton btnBack = new JButton("Back");
+	// to work with key board button press
+        InputMap bb = btnBack.getInputMap();
+        bb.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "pressed");
+        bb.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true), "released");
     	btnBack.setBounds(240, 105, 91, 23);
     	employerpanel.add(btnBack);
     	
@@ -172,28 +194,40 @@ public class Login{
     	lblpassengerUsername.setBounds(10, 35, 117, 14);
         passengerpanel.add(lblpassengerUsername);
 		
-		JTextField strpassengerUsername = new JTextField(20);
-		strpassengerUsername.setBounds(126, 32, 169, 20);
-		passengerpanel.add(strpassengerUsername);
-		strpassengerUsername.setColumns(10);
+	JTextField strpassengerUsername = new JTextField(20);
+	strpassengerUsername.setBounds(126, 32, 169, 20);
+	passengerpanel.add(strpassengerUsername);
+	strpassengerUsername.setColumns(10);
 		
-		JLabel lblPassword = new JLabel("Password:");
-		lblPassword.setBounds(10, 60, 83, 14);
-		passengerpanel.add(lblPassword);
+	JLabel lblPassword = new JLabel("Password:");
+	lblPassword.setBounds(10, 60, 83, 14);
+	passengerpanel.add(lblPassword);
 		
-		JPasswordField strPassword = new JPasswordField(20);
-		strPassword.setBounds(126, 57, 169, 20);
-		passengerpanel.add(strPassword);
+	JPasswordField strPassword = new JPasswordField(20);
+	strPassword.setBounds(126, 57, 169, 20);
+	passengerpanel.add(strPassword);
     		
     	JButton btnLogin = new JButton("Login");
+	// to work with key board button press
+        InputMap bl = btnLogin.getInputMap();
+        bl.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "pressed");
+        bl.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true), "released");
     	btnLogin.setBounds(10, 105, 91, 23);
     	passengerpanel.add(btnLogin);
     		
     	JButton btnReset = new JButton("Reset");
+	// to work with key board button press
+        InputMap br = btnReset.getInputMap();
+        br.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "pressed");
+        br.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true), "released");
     	btnReset.setBounds(120, 105, 91, 23);
     	passengerpanel.add(btnReset);
     		
     	JButton btnBack = new JButton("Back");
+	// to work with key board button press
+        InputMap bb = btnBack.getInputMap();
+        bb.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "pressed");
+        bb.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true), "released");
     	btnBack.setBounds(240, 105, 91, 23);
     	passengerpanel.add(btnBack);
     	
